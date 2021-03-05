@@ -17,17 +17,18 @@ public class UserServiceImpl implements UserService{
 
 	Map<String , UserRest> users; 
 	
+	@Autowired
 	Utils utils;
 	
 	public UserServiceImpl() {
 		
 	}
 	
-	@Autowired
-	public UserServiceImpl(Utils utils) {
-		this.utils=utils;
-		
-	}
+	/*
+	 * @Autowired public UserServiceImpl(Utils utils) { this.utils=utils;
+	 * 
+	 * }
+	 */
 	
 	@Override
 	public UserRest createUser(UserDetailsRequestModel userDetails) {
