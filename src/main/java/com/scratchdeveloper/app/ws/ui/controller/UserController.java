@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +27,17 @@ import com.scratchdeveloper.app.ws.ui.model.request.UpdateUserDetailsRequestMode
 import com.scratchdeveloper.app.ws.ui.model.request.UserDetailsRequestModel;
 //import com.scratchdeveloper.app.ws.ui.model.response.UserPost_Self_Test;
 import com.scratchdeveloper.app.ws.ui.model.response.UserRest;
+import com.scratchdeveloper.app.ws.userservice.UserService;
+import com.scratchdeveloper.app.ws.userservice.impl.UserServiceImpl;
 
 @RestController
 @RequestMapping("users") //http://localhost:8080/users
 public class UserController {
 	
 	Map<String , UserRest> users;
+	
+	@Autowired
+	UserService userService;
 	
 	@GetMapping(path = "/{userID}" , produces = {MediaType.APPLICATION_XML_VALUE ,MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<UserRest> getUser(@PathVariable String userID) {
@@ -80,20 +86,11 @@ public class UserController {
 			MediaType.APPLICATION_XML_VALUE ,
 			MediaType.APPLICATION_JSON_VALUE
 			})
-	public ResponseEntity<UserRest> createUser(@Valid @RequestBody(required = true) UserDetailsRequestModel userdetailsRequestModel){
+	public ResponseEntity<UserRest> createUser(@Valid @RequestBody(required = true) UserDetailsRequestModel userDetails){
 		
-		UserRest userRest = new UserRest();
-		userRest.setEmail(userdetailsRequestModel.getEmail());
-		userRest.setFirstName(userdetailsRequestModel.getFirstName());
-		userRest.setLastName(userdetailsRequestModel.getLastName());
+		UserRest returnValue=userService.createUser(userDetails);
 		
-		String userId =UUID.randomUUID().toString();
-		userRest.setUserId(userId);
-		
-		if(users == null) users=new HashMap<>();
-		users.put(userId,userRest);
-		
-		return new ResponseEntity<UserRest>(userRest ,HttpStatus.OK);
+		return new ResponseEntity<UserRest>(returnValue ,HttpStatus.OK);
 		
 	}
 	
